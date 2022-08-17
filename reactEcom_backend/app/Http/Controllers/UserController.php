@@ -14,10 +14,20 @@ class UserController extends Controller
             'name' => $request->name,
             'email' => $request->email,
             'password' => Hash::make($request->password)
-        ]; 
+        ];
 
         User::create($data);
 
         return $data;
+    }
+
+    public function login(Request $request)
+    {
+        $user = User::where('email',$request->email)->first();
+        if(!$user || !Hash::check($request->password,$user->password))
+        {
+            return ["error" => "Email or Password not match"];
+        }
+        return $user;
     }
 }
