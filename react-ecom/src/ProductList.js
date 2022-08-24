@@ -7,13 +7,23 @@ export default function ProductList() {
     const [data, setData] = useState([]);
 
     useEffect(() => {
-        async function fetchData() {
-            let result = await fetch("http://localhost:8000/api/listproduct");
-            result = await result.json();
-            setData(result);
-        }
         fetchData();
     }, [])
+
+    async function deleteBtn(id)
+    {
+        let result = await fetch("http://localhost:8000/api/deleteproduct/"+id,{
+            method: 'DELETE'
+        });
+        result = await result.json();
+        fetchData();
+    }
+
+    async function fetchData() {
+        let result = await fetch("http://localhost:8000/api/listproduct");
+        result = await result.json();
+        setData(result);
+    }
 
     return (
         <div>
@@ -27,6 +37,7 @@ export default function ProductList() {
                         <td>Price</td>
                         <td>Description</td>
                         <td>Image</td>
+                        <td>Action</td>
                     </tr>
                 </thead>
                 {
@@ -38,6 +49,7 @@ export default function ProductList() {
                                 <td>{item.price}</td>
                                 <td>{item.description}</td>
                                 <td><img src={"http://localhost:8000/"+item.file_path} /></td>
+                                <td><span onClick={() => deleteBtn(item.id)} className='delete'>Delete</span></td>
                             </tr>
                         </tbody>
                     )
